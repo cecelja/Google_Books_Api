@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class BookArrayAdapter extends ArrayAdapter<Book> {
+public class BookArrayAdapter extends ArrayAdapter<BookBitmap> {
 
     private static final String LOG_TAG = BookArrayAdapter.class.getName();
     private Activity cont;
@@ -37,7 +37,7 @@ public class BookArrayAdapter extends ArrayAdapter<Book> {
     private ArrayList<Bitmap> mapps;
     private boolean badUrl = false;
 
-    public BookArrayAdapter(Activity context, ArrayList<Book> books){
+    public BookArrayAdapter(Activity context, ArrayList<BookBitmap> books){
         super(context,0, books);
         cont = context;
     }
@@ -60,7 +60,7 @@ public class BookArrayAdapter extends ArrayAdapter<Book> {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         }
         //We need to find the current Book object at the position
-        Book currentBook = getItem(position);
+        BookBitmap currentBook = getItem(position);
 
         TextView title = (TextView) listItemView.findViewById(R.id.title_view);
         Log.i(LOG_TAG, "This is the title " + currentBook.getmTitle());
@@ -71,13 +71,13 @@ public class BookArrayAdapter extends ArrayAdapter<Book> {
         author.setText("By " + currentBook.getmAuthor());
 
         ImageView coverImage = (ImageView) listItemView.findViewById(R.id.image_view);
-        Log.i(LOG_TAG, "This is the image " + currentBook.getmImg());
+        Log.i(LOG_TAG, "This is the image " + currentBook.getmBitmap());
 
         Log.i(LOG_TAG, "Our bitmap array " + mapps);
         if(badUrl = true){
             coverImage.setImageResource(R.drawable.picture);
         }
-        coverImage.setImageBitmap(mapps.get(position));
+        coverImage.setImageBitmap(currentBook.getmBitmap());
 
         return listItemView;
     }

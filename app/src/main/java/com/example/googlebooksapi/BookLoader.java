@@ -15,11 +15,11 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-public class BookLoader extends AsyncTaskLoader<ArrayList<Book>> {
+public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
     private static final String LOG_TAG = BookLoader.class.getName();
 
     public String urls = null;
-    private ArrayList<Bitmap> mapps;
+    private ArrayList<Bitmap> mapps = new ArrayList<Bitmap>();
     private boolean badUrl = false;
     private ArrayList<BookBitmap> bokic;
 
@@ -34,17 +34,27 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<Book>> {
     }
 
     @Override
-    public ArrayList<Book> loadInBackground() {
+    public ArrayList<BookBitmap> loadInBackground() {
         //Dont perform a network request if there are no urls
         if (urls == null){
             return null;
         }
         ArrayList<Book> books = Utils.fetchBookData(urls);
-        for(int i = 0; i < books.size(); i++){
-        new DownloadImage().execute(books.get(i).getmImg());
+        for(int i = 1; i < books.size(); i++)
+        {
+            Log.i(LOG_TAG, "Size " + books.size());
+            new DownloadImage().execute(books.get(i).getmImg());
+            Log.i(LOG_TAG, "Mapps " + mapps.get(i));
+            Log.i(LOG_TAG, "This should be printed");
         }
-        
-        return books;
+
+        for(int k = 0; k < books.size(); k++){
+
+            bokic.add(new BookBitmap(books.get(k), mapps.get(k)));
+        }
+
+
+        return bokic;
     }
     public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
 
@@ -90,6 +100,7 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<Book>> {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             mapps.add(bitmap);
-            Log.i(LOG_TAG, "This is bitmap ");
+            Log.i(LOG_TAG, "This is bitmap " + bitmap);
         }
+    }
 }

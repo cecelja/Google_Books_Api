@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Book>> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<BookBitmap>> {
 
     private BookArrayAdapter mAdapter;
     private EditText searchBox;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         search = (Button) findViewById(R.id.button);
 
         //Create a new adapter and populate it with a null arrayList
-        mAdapter = new BookArrayAdapter(this, new ArrayList<Book>());
+        mAdapter = new BookArrayAdapter(this, new ArrayList<BookBitmap>());
         //set the adapter to the listview
 
         //We create a onClickListener for our button which controls and sends the query to the server
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @NonNull
     @Override
-    public Loader<ArrayList<Book>> onCreateLoader(int i, Bundle bundle) {
+    public Loader<ArrayList<BookBitmap>> onCreateLoader(int i, Bundle bundle) {
         Log.i(LOG_TAG, "Filip, Here we are in the onCreateLoader method");
         Log.i(LOG_TAG, "Filip, WHERE IS ONCREATE " + GOOGLE_BOOKS_URL);
         BookLoader loader = new BookLoader(this, GOOGLE_BOOKS_URL);
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<Book>> loader, ArrayList<Book> books) {
+    public void onLoadFinished(Loader<ArrayList<BookBitmap>> loader, ArrayList<BookBitmap> books) {
         //Here we clear the adapter with anydata it previously had
         mAdapter.clear();
         Log.i(LOG_TAG, "Filip, Here we are in the onLoadFinished method, before populating the dapter");
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<Book>> loader) {
+    public void onLoaderReset(Loader<ArrayList<BookBitmap>> loader) {
         mAdapter.clear();
     }
 
