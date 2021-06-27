@@ -15,13 +15,17 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Thread.sleep;
+
 public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
     private static final String LOG_TAG = BookLoader.class.getName();
 
     public String urls = null;
     private ArrayList<Bitmap> mapps = new ArrayList<Bitmap>();
     private boolean badUrl = false;
-    private ArrayList<BookBitmap> bokic;
+    private ArrayList<BookBitmap> bokic = new ArrayList<BookBitmap>();
 
     public BookLoader (Context context, String url){
         super(context);
@@ -40,17 +44,26 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
             return null;
         }
         ArrayList<Book> books = Utils.fetchBookData(urls);
-        for(int i = 1; i < books.size(); i++)
+        for(int i = 0; i < books.size(); i++)
         {
             Log.i(LOG_TAG, "Size " + books.size());
             new DownloadImage().execute(books.get(i).getmImg());
-            Log.i(LOG_TAG, "Mapps " + mapps.get(i));
+            try{
+            Thread.sleep(500);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
             Log.i(LOG_TAG, "This should be printed");
+
         }
+        Log.i(LOG_TAG, "Books KA " + books);
+        Log.i(LOG_TAG, "Mapps KA " + mapps);
 
         for(int k = 0; k < books.size(); k++){
-
+            Log.i(LOG_TAG, "Why is it wrong " + mapps.get(k));
+            Log.i(LOG_TAG, "Why is it wrongg " + books.get(k));
             bokic.add(new BookBitmap(books.get(k), mapps.get(k)));
+            Log.i(LOG_TAG, "The other array " + bokic);
         }
 
 
@@ -94,13 +107,14 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
                 Log.e(LOG_TAG, "Problems with the connection", e);
             }
             Log.i(LOG_TAG, "This is the image bitmap " + imageBitmap);
+            mapps.add(imageBitmap);
             return imageBitmap;
 
         }
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            mapps.add(bitmap);
             Log.i(LOG_TAG, "This is bitmap " + bitmap);
+            Log.i(LOG_TAG, "This is mapps " + mapps);
         }
     }
 }

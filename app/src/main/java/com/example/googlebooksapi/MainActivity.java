@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 //Controlling if there is no text entered that it prints a message for a invalid query
                 if(query.equals("")){
                     Toast.makeText(getApplicationContext(),"Insert a valid query.",Toast. LENGTH_SHORT).show();
+                    return;
                 }
                 //Checking if a valid query has been entered
                 if(countSpaces(query) == 0){
