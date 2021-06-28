@@ -1,6 +1,8 @@
 package com.example.googlebooksapi;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -25,11 +27,13 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
     public String urls = null;
     private ArrayList<Bitmap> mapps = new ArrayList<Bitmap>();
     private boolean badUrl = false;
+    private Context cont;
     private ArrayList<BookBitmap> bokic = new ArrayList<BookBitmap>();
 
     public BookLoader (Context context, String url){
         super(context);
         urls = url;
+        cont = context;
     }
 
     @Override
@@ -43,13 +47,24 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
         if (urls == null){
             return null;
         }
+
+        //Fetch the data from the given query
         ArrayList<Book> books = Utils.fetchBookData(urls);
+
+        //If there is no retrievd data return null
+        if(books == null){
+            return null;
+        }
+
+        //Loop until every image has been downloaded and stored as a bitmap
         for(int i = 0; i < books.size(); i++)
         {
             Log.i(LOG_TAG, "Size " + books.size());
+            //Run an asynctask to download the image from the urls we recieved previously
             new DownloadImage().execute(books.get(i).getmImg());
             try{
-            Thread.sleep(500);
+                //Sleep the thread because there are certain problems with multiple asynctasks at once
+            Thread.sleep(350);
             } catch (InterruptedException e){
                 e.printStackTrace();
             }
@@ -59,8 +74,8 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
         Log.i(LOG_TAG, "Books KA " + books);
         Log.i(LOG_TAG, "Mapps KA " + mapps);
 
+        //Populate an ArrayList with new BookBitmap objects
         for(int k = 0; k < books.size(); k++){
-            Log.i(LOG_TAG, "Why is it wrong " + mapps.get(k));
             Log.i(LOG_TAG, "Why is it wrongg " + books.get(k));
             bokic.add(new BookBitmap(books.get(k), mapps.get(k)));
             Log.i(LOG_TAG, "The other array " + bokic);
@@ -81,9 +96,19 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
         protected Bitmap doInBackground(String... strings) {
             String imageURLString = strings[0];
 
+            //Check if there is a url for the image, if not set a key String "nourl"
+            if(imageURLString == "nourl"){
+                //Set the bitmap to a bitmap that displays if no cover picture available
+                Bitmap bmp = BitmapFactory.decodeResource(cont.getResources(), R.drawable.picture);
+                mapps.add(bmp);
+                return bmp;
+            }
+
+            //Turn a String to a URL
             URL imageURL = Utils.createURL(imageURLString);
             Log.i(LOG_TAG, "This is imageURL " + imageURL);
 
+            //If there are issues with the url return null
             if(imageURL == null || imageURL.equals("")){
                 badUrl = true;
                 Log.i(LOG_TAG, "No it does not hit");
@@ -94,6 +119,7 @@ public class BookLoader extends AsyncTaskLoader<ArrayList<BookBitmap>> {
             HttpURLConnection imageConnection = null;
             InputStream imageStream = null;
             try {
+                //Connect and download the image
                 Log.i(LOG_TAG, "Connection start");
                 imageConnection = (HttpURLConnection) imageURL.openConnection();
                 Log.i(LOG_TAG, "Connection resume");

@@ -56,6 +56,13 @@ public final class Utils {
             //Create a new JSONObject which is the root object of our query
             JSONObject root = new JSONObject(query);
             Log.i(LOG_TAG, "Filip, Root Json object " + query);
+
+
+            //If the query is gibberish and nothing is found we return a null arraylist
+            if(root.getInt("totalItems") == 0){
+                return null;
+            }
+
             //Navigate the root object and store the JSONArray which has our information
             JSONArray rootArray = root.optJSONArray("items");
             Log.i(LOG_TAG, "Filip, Root array object " + rootArray);
@@ -83,9 +90,20 @@ public final class Utils {
                 Log.i(LOG_TAG, "Filip, TItle of the book " + author);
                 String imageURL;
                 //Create a JSONOBject that contains image url properties of the object
-                JSONObject images = bookObject.optJSONObject("imageLinks");
-                //Store the url of the given image
-                imageURL = images.getString("smallThumbnail");
+                JSONObject images = null;
+
+                //Here we have to check if there are images linked to the particular book
+                if(bookObject.optJSONObject("imageLinks") == null){
+                    images = null;
+                    //If there are no images we assign the "nourl" string so we know to put a "no book cover found" image
+                    imageURL = "nourl";
+                } else {
+                    //If there is an image, extract its link
+                    images = bookObject.optJSONObject("imageLinks");
+                    imageURL = images.getString("smallThumbnail");
+                }
+                 ;
+                Log.i(LOG_TAG, "Fliip is there a imageLinks object " + images);
 
                 Log.i(LOG_TAG, "Filip, The image of the book " + imageURL);
 
@@ -155,6 +173,7 @@ public final class Utils {
             }
         }
         Log.i(LOG_TAG, "Filip, Json response is " + jsonResponse);
+
         return jsonResponse;
 
     }
