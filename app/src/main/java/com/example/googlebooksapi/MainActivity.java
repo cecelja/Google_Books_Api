@@ -1,7 +1,5 @@
 package com.example.googlebooksapi;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -122,22 +120,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     Toast.makeText(getApplicationContext(),"Insert a valid query.",Toast. LENGTH_SHORT).show();
                     return;
                 }
-                //Checking if a valid query has been entered
-                if(countSpaces(query) == 0){
-                    //Modifyying the url with the given query
-                    GOOGLE_BOOKS_URL =  "https://www.googleapis.com/books/v1/volumes?q="+query+"&maxResults=10";
-                    Log.i(LOG_TAG, "Filip, WHERE IS THE URL " + GOOGLE_BOOKS_URL);
-                    Log.i(LOG_TAG, "Filip, THE QUERY IS " + query);
-                    //After the modification clear the focus from the query
-                    searchBox.clearFocus();
-                    //Run the handler thread which fetches the data from the api and displays it
-                    handler.post(runnable);
-                } else {
-                    //If multiple words are entered clear the focus, clear the edittext and print a toast sending a invalid query message
-                    Toast.makeText(getApplicationContext(),"Insert a valid query.",Toast. LENGTH_SHORT).show();
-                    searchBox.clearFocus();
-                    searchBox.setText("");
-                }
+                //Modifying the url
+                GOOGLE_BOOKS_URL =  "https://www.googleapis.com/books/v1/volumes?q="+query+"&maxResults=10";
+                Log.i(LOG_TAG, "Filip, WHERE IS THE URL " + GOOGLE_BOOKS_URL);
+                Log.i(LOG_TAG, "Filip, THE QUERY IS " + query);
+                //After the modification clear the focus from the query
+                searchBox.clearFocus();
+                //Run the handler thread which fetches the data from the api and displays it
+                handler.post(runnable);
             }
         });
         //Define a new runnable thread
@@ -159,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-    @NonNull
     @Override
     public Loader<ArrayList<BookBitmap>> onCreateLoader(int i, Bundle bundle) {
         Log.i(LOG_TAG, "Filip, Here we are in the onCreateLoader method");
@@ -178,7 +167,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Here we clear the adapter with anydata it previously had
         mAdapter.clear();
         //If the loader returns null or there is no internet create a simple message
+        if(books == null){
         textView.setText("No books found.");
+        }
         //After the data has loaded hide the progress bar
         progressBar.setVisibility(View.GONE);
         Log.i(LOG_TAG, "Filip, Here we are in the onLoadFinished method, before populating the dapter");
@@ -211,15 +202,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-
     }
 
     //Function that parses the query string correctly for the query api call

@@ -95,7 +95,8 @@ public final class Utils {
                 //Here we have to check if there are images linked to the particular book
                 if(bookObject.optJSONObject("imageLinks") == null){
                     images = null;
-                    //If there are no images we assign the "nourl" string so we know to put a "no book cover found" image
+                    //If there are no images we assign the "nourl" string so we know
+                    // to put a "no book cover found" image
                     imageURL = "nourl";
                 } else {
                     //If there is an image, extract its link

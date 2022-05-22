@@ -11,7 +11,6 @@
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:orientation="horizontal">
 
         <Button
@@ -19,20 +18,28 @@
             android:id="@+id/button"
             android:backgroundTint="@color/black"
             android:text="Search"
+            android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginRight="16dp"
             android:layout_weight="0" />
 
         <EditText
             android:id="@+id/search_box"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
+            android:background="@drawable/shape"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:drawablePadding="12dp"
+            android:layout_height="50dp"
+            android:drawableStart="@drawable/ic_baseline"
             android:layout_weight="1"
             android:hint="Enter a search query"
+            android:textSize="16sp"
             android:inputType="text" />
 
     </LinearLayout>
